@@ -83,7 +83,13 @@ template<typename T> void treap<T>::insert(const T& x) {
 }
 
 template<typename T> bool treap<T>::remove(const T& x) {
-	return false;
+	if (!root) return false;
+	node_pair p = treap_split(root, x);
+	if (!p.first) return false;
+	node_pair q = treap_split(p.first, x, cached_less);
+	if (!p.right) return false;
+	my_size--;
+	root = treap_merge(q.first, p.second);
 }
 
 template<typename T> bool treap<T>::contains(const T& x) const {
