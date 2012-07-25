@@ -49,6 +49,15 @@ template<typename T> typename treap<T>::node_pair treap<T>::treap_split(node v, 
 }
 
 template<typename T> typename treap<T>::node treap<T>::treap_merge(node left, node right) {
+	if (!left) return right;
+	if (!right) return left;
+	if (left->priority > right->priority) {
+		left->right = treap_merge(left->right, right);
+		return left;
+	} else {
+		right->left = treap_merge(right->left, left);
+		return right;
+	}
 }
 
 
