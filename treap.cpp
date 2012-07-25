@@ -1,4 +1,5 @@
 #include <utility>
+#include <cstdlib>
 
 template<typename T> struct treap_node {
 	T key;
@@ -6,9 +7,9 @@ template<typename T> struct treap_node {
 	treap_node<T>* left;
 	treap_node<T>* right;
 	
-	treap_node(const T& _key, int _priority):
+	treap_node(const T& _key):
 		key(_key),
-		priority(_priority),
+		priority(rand() ^ (rand() << 15)),
 		left(0),
 		right(0)
 	{}
@@ -19,6 +20,7 @@ template<typename T> struct treap {
 	typedef std::pair<node, node> node_pair;
 	
 	node root;
+	int my_size;
 	
 	treap(): root(0) {}
 	virtual ~treap() {}
@@ -26,6 +28,7 @@ template<typename T> struct treap {
 	void insert(const T& x);
 	bool remove(const T& x);
 	bool contains(const T& x) const;
+	int size() const;
 	
 	node_pair treap_split(node v, const T& key);
 	node treap_merge(node left, node right);
@@ -63,6 +66,14 @@ template<typename T> typename treap<T>::node treap<T>::treap_merge(node left, no
 
 
 template<typename T> void treap<T>::insert(const T& x) {
+	my_size++;
+	node v = new treap_node<T>(x);
+	if (!root) {
+		root = v;
+		return;
+	}
+	node_pair p = treap_split(root, x);
+	root = treap_merge(p.first, treap_merge(v, p.second));
 }
 
 template<typename T> bool treap<T>::remove(const T& x) {
@@ -71,6 +82,10 @@ template<typename T> bool treap<T>::remove(const T& x) {
 
 template<typename T> bool treap<T>::contains(const T& x) const {
 	return false;
+}
+
+template<typename T> inline int treap<T>::size() const {
+	return my_size;
 }
 
 
