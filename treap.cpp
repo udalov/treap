@@ -27,15 +27,28 @@ template<typename T> struct treap {
 	bool remove(const T& x);
 	bool contains(const T& x) const;
 	
-	node_pair treap_split(node node, const T& key);
+	node_pair treap_split(node v, const T& key);
 	node treap_merge(node left, node right);
 };
 
 
-template<typename T> typename treap<T>::node_pair treap<T>::treap_split(treap<T>::node node, const T& key) {
+template<typename T> typename treap<T>::node_pair treap<T>::treap_split(node v, const T& key) {
+	if (!v) return node_pair(0, 0);
+	// left tree should contain all keys <= key
+	if (v->key <= key) {
+		node_pair p = treap_split(v->right, key);
+		v->right = p.first;
+		p.first = v;
+		return p;
+	} else {
+		node_pair p = treap_split(v->left, key);
+		v->left = p.second;
+		p.second = v;
+		return p;
+	}
 }
 
-template<typename T> typename treap<T>::node treap<T>::treap_merge(treap<T>::node left, treap<T>::node right) {
+template<typename T> typename treap<T>::node treap<T>::treap_merge(node left, node right) {
 }
 
 
@@ -56,3 +69,4 @@ template<typename T> bool treap<T>::contains(const T& x) const {
 int main() {
 	return 0;
 }
+
