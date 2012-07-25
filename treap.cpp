@@ -30,7 +30,7 @@ template<typename T> struct treap {
 	virtual ~treap() {}
 	
 	void insert(const T& x);
-	bool remove(const T& x);
+	bool erase(const T& x);
 	bool contains(const T& x) const;
 	int size() const;
 	
@@ -82,7 +82,7 @@ template<typename T> void treap<T>::insert(const T& x) {
 	root = treap_merge(p.first, treap_merge(v, p.second));
 }
 
-template<typename T> bool treap<T>::remove(const T& x) {
+template<typename T> bool treap<T>::erase(const T& x) {
 	if (!root) return false;
 	node_pair p = treap_split(root, x);
 	if (!p.first) return false;
@@ -108,11 +108,25 @@ template<typename T> inline int treap<T>::size() const {
 
 
 #include <cstdio>
+#include <ctime>
+#include <set>
+
+template<typename V> double measure(int n) {
+	clock_t begin = clock();
+	V v;
+	for (int i = 0; i < n; i++)
+		v.insert(i);
+	for (int i = 0; i < n; i++)
+		v.erase(i);
+	clock_t end = clock();
+	return (end - begin) * 1. / CLOCKS_PER_SEC;
+}
+
 int main() {
-	treap<int> t;
-	for (int i = 0; i < 10; i++) t.insert(i);
-	printf("%d\n", t.size());
-	for (int i = 0; i < 10; i++) t.remove(i);
-	printf("%d\n", t.size());
+	const int n = 1000000;
+	
+	printf("  set: %.6lf\n", measure< std::set<int> >(n));
+	printf("treap: %.6lf\n", measure< treap<int> >(n));
+	
 	return 0;
 }
