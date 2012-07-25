@@ -1,3 +1,4 @@
+#include <functional>
 #include <utility>
 #include <cstdlib>
 
@@ -19,10 +20,16 @@ template<typename T> struct treap {
 	typedef treap_node<T>* node;
 	typedef std::pair<node, node> node_pair;
 	
+	static const std::binary_function<T, T, bool>& cached_less = std::less<T>();
+	static const std::binary_function<T, T, bool>& cached_less_equal = std::less_equal<T>();
+	
 	node root;
 	int my_size;
 	
-	treap(): root(0) {}
+	treap():
+		root(0),
+		my_size(0)
+	{}
 	virtual ~treap() {}
 	
 	void insert(const T& x);
@@ -30,21 +37,20 @@ template<typename T> struct treap {
 	bool contains(const T& x) const;
 	int size() const;
 	
-	node_pair treap_split(node v, const T& key);
+	node_pair treap_split(node v, const T& key, const std::binary_function<T, T, bool>& cmp = cached_less_equal);
 	node treap_merge(node left, node right);
 };
 
 
-template<typename T> typename treap<T>::node_pair treap<T>::treap_split(node v, const T& key) {
+template<typename T> typename treap<T>::node_pair treap<T>::treap_split(node v, const T& key, const std::binary_function<T, T, bool>& cmp) {
 	if (!v) return node_pair(0, 0);
-	// left tree should contain all keys <= key
-	if (v->key <= key) {
-		node_pair p = treap_split(v->right, key);
+	if (cmp(v->key, key)) {
+		node_pair p = treap_split(v->right, key, cmp);
 		v->right = p.first;
 		p.first = v;
 		return p;
 	} else {
-		node_pair p = treap_split(v->left, key);
+		node_pair p = treap_split(v->left, key, cmp);
 		v->left = p.second;
 		p.second = v;
 		return p;
@@ -93,4 +99,3 @@ template<typename T> inline int treap<T>::size() const {
 int main() {
 	return 0;
 }
-
