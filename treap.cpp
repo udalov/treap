@@ -20,8 +20,8 @@ template<typename T> struct treap {
 	typedef treap_node<T>* node;
 	typedef std::pair<node, node> node_pair;
 	
-	static const std::binary_function<T, T, bool>& cached_less = std::less<T>();
-	static const std::binary_function<T, T, bool>& cached_less_equal = std::less_equal<T>();
+	static const std::binary_function<T, T, bool>& cached_less;
+	static const std::binary_function<T, T, bool>& cached_less_equal;
 	
 	node root;
 	int my_size;
@@ -40,6 +40,9 @@ template<typename T> struct treap {
 	node_pair treap_split(node v, const T& key, const std::binary_function<T, T, bool>& cmp = cached_less_equal);
 	node treap_merge(node left, node right);
 };
+
+template<typename T> const std::binary_function<T, T, bool>& treap<T>::cached_less = std::less<T>();
+template<typename T> const std::binary_function<T, T, bool>& treap<T>::cached_less_equal = std::less_equal<T>();
 
 
 template<typename T> typename treap<T>::node_pair treap<T>::treap_split(node v, const T& key, const std::binary_function<T, T, bool>& cmp) {
@@ -87,7 +90,7 @@ template<typename T> bool treap<T>::remove(const T& x) {
 	node_pair p = treap_split(root, x);
 	if (!p.first) return false;
 	node_pair q = treap_split(p.first, x, cached_less);
-	if (!p.right) return false;
+	if (!q.second) return false;
 	my_size--;
 	root = treap_merge(q.first, p.second);
 }
@@ -103,5 +106,6 @@ template<typename T> inline int treap<T>::size() const {
 
 
 int main() {
+	treap<int> t;
 	return 0;
 }
