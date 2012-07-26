@@ -29,7 +29,7 @@ template<typename T> struct treap {
     {}
     virtual ~treap() {}
     
-    void insert(const T& x);
+    bool insert(const T& x);
     bool erase(const T& x);
     bool contains(const T& x) const;
     int size() const;
@@ -71,15 +71,22 @@ template<typename T> typename treap<T>::node treap<T>::treap_merge(node left, no
 
 
 
-template<typename T> void treap<T>::insert(const T& x) {
-    my_size++;
+template<typename T> bool treap<T>::insert(const T& x) {
     node v = new treap_node<T>(x);
     if (!root) {
+        my_size++;
         root = v;
-        return;
+        return true;
     }
     node_pair p = treap_split(root, x);
+    node r = p.first;
+    if (r) while (r->right)
+        r = r->right;
+    if (r && r->key == x)
+        return false;
+    my_size++;
     root = treap_merge(p.first, treap_merge(v, p.second));
+    return true;
 }
 
 template<typename T> bool treap<T>::erase(const T& x) {
