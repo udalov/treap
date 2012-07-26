@@ -43,7 +43,7 @@ template<typename T> struct treap {
 template<typename T> typename treap<T>::node_pair treap<T>::treap_split(node v, const T& key, bool less_equal) {
     if (!v) return node_pair(0, 0);
     //TODO: rewrite to templates
-    bool cmp_result = less_equal ? (v->key <= key) : (v->key < key);
+    bool cmp_result = less_equal ? (!(key < v->key)) : (v->key < key);
     if (cmp_result) {
         node_pair p = treap_split(v->right, key, less_equal);
         v->right = p.first;
@@ -82,7 +82,7 @@ template<typename T> bool treap<T>::insert(const T& x) {
     node r = p.first;
     if (r) while (r->right)
         r = r->right;
-    if (r && r->key == x)
+    if (r && !(r->key < x) && !(x < r->key))
         return false;
     my_size++;
     root = treap_merge(p.first, treap_merge(v, p.second));
