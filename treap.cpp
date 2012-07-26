@@ -129,6 +129,7 @@ template<typename T> inline int treap<T>::size() const {
 }
 
 
+#include <cassert>
 #include <cstdio>
 #include <ctime>
 #include <set>
@@ -138,12 +139,16 @@ template<typename V> double measure(int n) {
     V v;
     for (int i = 0; i < n; i++)
         v.insert(i);
+    assert((int)v.size() == n);
     for (int i = 0; i < n; i++)
         v.insert(i);
+    assert((int)v.size() == n);
     for (int i = 0; i < n; i++)
         v.erase(i);
+    assert(v.size() == 0);
     for (int i = 0; i < n; i++)
         v.erase(i);
+    assert(v.size() == 0);
     clock_t end = clock();
     return (end - begin) * 1. / CLOCKS_PER_SEC;
 }
