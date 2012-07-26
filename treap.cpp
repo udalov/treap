@@ -124,6 +124,10 @@ template<typename V> double measure(int n) {
     for (int i = 0; i < n; i++)
         v.insert(i);
     for (int i = 0; i < n; i++)
+        v.insert(i);
+    for (int i = 0; i < n; i++)
+        v.erase(i);
+    for (int i = 0; i < n; i++)
         v.erase(i);
     clock_t end = clock();
     return (end - begin) * 1. / CLOCKS_PER_SEC;
