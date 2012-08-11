@@ -34,6 +34,26 @@ void test_simple_insert_contains_erase() {
     assert_true(a.empty());
 }
 
+
+struct object {
+    int value;
+    object(int _value): value(_value) {}
+};
+inline bool operator< (const object& a, const object& b) { return a.value < b.value; }
+
+void test_operator_less_is_enough() {
+    treap<object> a;
+    const int n = 10;
+    forn(i, n) a.insert(object(i));
+    assert_equals(sz(a), n);
+    forn(i, n) assert_true(a.contains(object(i)));
+    assert_true(!a.contains(object(-1)));
+    assert_true(!a.contains(object(n)));
+    forn(i, n) a.erase(object(i));
+    assert_true(a.empty());
+}
+
+
 template<typename V> double measure(int n) {
     clock_t begin = clock();
     V v;
@@ -55,8 +75,10 @@ void test_performance() {
     printf("treap: %.3lf\n", measure< treap<int> >(n));
 }
 
+
 int main() {
     t(test_simple_insert_contains_erase);
+    t(test_operator_less_is_enough);
     t(test_performance);
     return 0;
 }
