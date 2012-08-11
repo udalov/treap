@@ -44,8 +44,8 @@ template<typename T> struct treap {
     bool erase_slow(const T& x);
     bool contains_slow(const T& x) const;
     
-    node_pair treap_split(node v, const T& key, bool less_equal = true);
-    node treap_merge(node left, node right);
+    static node_pair treap_split(node v, const T& key, bool less_equal = true);
+    static node treap_merge(node left, node right);
 };
 
 
