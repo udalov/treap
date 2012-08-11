@@ -8,6 +8,32 @@
 #define sz(v) ((int)((v).size()))
 #define forn(i,n) for (int i = 0; i < (n); i++)
 
+void test_simple_insert_contains_erase() {
+    treap<int> a;
+    const int n = 10;
+    forn(i, n) a.insert(i);
+    assert_equals(sz(a), n);
+    forn(i, n) {
+        assert_true(a.contains(i));
+        a.insert(i);
+        assert_true(a.contains(i));
+        assert_equals(sz(a), n);
+    }
+    for (int i = 1; i < n-1; i++) {
+        a.erase(i);
+        assert_true(!a.contains(i));
+        assert_equals(sz(a), n - i);
+    }
+    a.insert(1); // [0,1,n-1]
+    assert_equals(sz(a), 3);
+    a.erase(n-1);
+    a.erase(0);
+    assert_equals(sz(a), 1);
+    assert_true(a.contains(1));
+    a.erase(1);
+    assert_true(a.empty());
+}
+
 template<typename V> double measure(int n) {
     clock_t begin = clock();
     V v;
@@ -30,6 +56,7 @@ void test_performance() {
 }
 
 int main() {
+    t(test_simple_insert_contains_erase);
     t(test_performance);
     return 0;
 }
