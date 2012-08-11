@@ -39,6 +39,7 @@ template<typename T> struct treap {
     bool erase(const T& x);
     bool contains(const T& x) const;
     int size() const;
+    bool empty() const;
     
     bool insert_slow(const T& x);
     bool erase_slow(const T& x);
@@ -131,5 +132,9 @@ template<typename T> bool treap<T>::contains_slow(const T& x) const {
 
 template<typename T> inline int treap<T>::size() const {
     return root ? root->size : 0;
+}
+
+template<typename T> inline bool treap<T>::empty() const {
+    return size() == 0;
 }
 
