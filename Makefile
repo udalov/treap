@@ -1,5 +1,5 @@
 main:
-	g++ -O2 main.cpp -o main.out
+	g++ -Wall -O2 main.cpp -o main.out
 
 test: main
 	./main.out
