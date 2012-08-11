@@ -2,6 +2,8 @@
 #include <utility>
 #include <cstdlib>
 
+int new_priority() { return rand() ^ (rand() << 15); }
+
 template<typename T> struct treap_node {
     typedef treap_node<T>* node;
 
@@ -13,7 +15,7 @@ template<typename T> struct treap_node {
     
     treap_node(const T& _key):
         key(_key),
-        priority(rand() ^ (rand() << 15)),
+        priority(new_priority()),
         size(1),
         left(0),
         right(0)
