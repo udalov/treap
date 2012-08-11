@@ -2,11 +2,13 @@
 #include "testlib.cc"
 
 #include <cstdio>
+#include <cstdlib>
 #include <ctime>
 #include <set>
 
 #define sz(v) ((int)((v).size()))
 #define forn(i,n) for (int i = 0; i < (n); i++)
+#define forit(it,v) for (typeof((v).begin()) it = (v).begin(); it != (v).end(); ++it)
 
 void test_simple_insert_contains_erase() {
     treap<int> a;
@@ -54,6 +56,32 @@ void test_operator_less_is_enough() {
 }
 
 
+void test_random_insert_erase() {
+    const int operations = 1000;
+    const int seeds = 100;
+    const int integer_range = 25;
+    const double erase_prob = 0.4;
+    forn(seed, seeds) {
+        srand(seed);
+        treap<int> a;
+        std::set<int> s;
+        forn(i, operations) {
+            double rnd = rand() * 1. / RAND_MAX;
+            int rnd_el = rand() % integer_range;
+            if (rnd < erase_prob) { // erase
+                a.erase(rnd_el);
+                s.erase(rnd_el);
+            } else { // insert
+                a.insert(rnd_el);
+                s.insert(rnd_el);
+            }
+        }
+        assert_equals(sz(a), sz(s));
+        forit(it, s) assert_true(a.contains(*it));
+    }
+}
+
+
 template<typename V> double measure(int n) {
     clock_t begin = clock();
     V v;
@@ -79,6 +107,7 @@ void test_performance() {
 int main() {
     t(test_simple_insert_contains_erase);
     t(test_operator_less_is_enough);
+    t(test_random_insert_erase);
     t(test_performance);
     return 0;
 }
