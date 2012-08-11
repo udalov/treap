@@ -87,19 +87,21 @@ template<typename T> bool treap<T>::contains(const T& x) const {
 }
 
 template<typename T> bool treap<T>::insert_slow(const T& x) {
-    node v = new treap_node<T>(x);
     if (!root) {
         my_size++;
-        root = v;
+        root = new treap_node<T>(x);
         return true;
     }
     node_pair p = treap_split(root, x);
     node r = p.first;
     if (r) while (r->right)
         r = r->right;
-    if (r && !(r->key < x) && !(x < r->key))
+    if (r && !(r->key < x) && !(x < r->key)) {
+        root = treap_merge(p.first, p.second);
         return false;
+    }
     my_size++;
+    node v = new treap_node<T>(x);
     root = treap_merge(p.first, treap_merge(v, p.second));
     return true;
 }
