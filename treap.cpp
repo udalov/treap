@@ -68,7 +68,7 @@ template<typename T> typename treap<T>::node treap<T>::treap_merge(node left, no
         left->right = treap_merge(left->right, right);
         return left;
     } else {
-        right->left = treap_merge(right->left, left);
+        right->left = treap_merge(left, right->left);
         return right;
     }
 }
