@@ -18,13 +18,13 @@ const char* __t_res[2] = {
 
 #define assert_equals(x, y) { \
     if (!((x) == (y))) { \
-        printf("  assertion failed: assert_equals(%s, %s)\n", #x, #y); \
+        printf("  assertion failed (%s:%d): assert_equals(%s, %s)\n", __FILE__, __LINE__, #x, #y); \
         throw test_failure(); \
     } }
 
 #define assert_true(x) { \
     if (!(x)) { \
-        printf("  assertion failed: assert_true(%s)\n", #x); \
+        printf("  assertion failed (%s:%d): assert_true(%s)\n", __FILE__, __LINE__, #x); \
         throw test_failure(); \
     } }
 
