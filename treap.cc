@@ -43,7 +43,6 @@ template<typename T> struct treap {
     
     bool insert_slow(const T& x);
     bool erase_slow(const T& x);
-    bool contains_slow(const T& x) const;
     
     static node_pair treap_split(node v, const T& key, bool less_equal = true);
     static node treap_merge(node left, node right);
@@ -90,7 +89,17 @@ template<typename T> bool treap<T>::erase(const T& x) {
 }
 
 template<typename T> bool treap<T>::contains(const T& x) const {
-    return contains_slow(x);
+    node v = root;
+    while (v) {
+        if (v->key < x) {
+            v = v->right;
+        } else if (x < v->key) {
+            v = v->left;
+        } else {
+            return true;
+        }
+    }
+    return false;
 }
 
 template<typename T> bool treap<T>::insert_slow(const T& x) {
@@ -118,15 +127,6 @@ template<typename T> bool treap<T>::erase_slow(const T& x) {
     node_pair q = treap_split(p.first, x, false);
     if (!q.second) return false;
     root = treap_merge(q.first, p.second);
-    return true;
-}
-
-template<typename T> bool treap<T>::contains_slow(const T& x) const {
-    if (!root) return false;
-    node_pair p = treap_split(root, x);
-    if (!p.first) return false;
-    node_pair q = treap_split(p.first, x, false);
-    if (!q.second) return false;
     return true;
 }
 
