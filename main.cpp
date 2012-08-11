@@ -12,13 +12,13 @@ template<typename V> double measure(int n) {
     clock_t begin = clock();
     V v;
     forn(i, n) v.insert(i);
-    assert_equal(sz(v), n);
+    assert_equals(sz(v), n);
     forn(i, n) v.insert(i);
-    assert_equal(sz(v), n);
+    assert_equals(sz(v), n);
     forn(i, n) v.erase(i);
-    assert_equal(sz(v), 0);
+    assert_equals(sz(v), 0);
     forn(i, n) v.erase(i);
-    assert_equal(sz(v), 0);
+    assert_equals(sz(v), 0);
     clock_t end = clock();
     return (end - begin) * 1. / CLOCKS_PER_SEC;
 }
