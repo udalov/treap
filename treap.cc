@@ -123,11 +123,13 @@ template<typename T> bool treap<T>::insert_slow(const T& x) {
 template<typename T> bool treap<T>::erase_slow(const T& x) {
     if (!root) return false;
     node_pair p = treap_split(root, x);
-    if (!p.first) return false;
+    if (!p.first) {
+        root = p.second;
+        return false;
+    }
     node_pair q = treap_split(p.first, x, false);
-    if (!q.second) return false;
     root = treap_merge(q.first, p.second);
-    return true;
+    return q.second;
 }
 
 template<typename T> inline int treap<T>::size() const {
