@@ -1,6 +1,6 @@
-treap:
-	g++ -O2 treap.cpp -o treap.out
+main:
+	g++ -O2 main.cpp -o main.out
 
 clean:
-	rm treap.out
+	rm main.out
 
