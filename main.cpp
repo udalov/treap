@@ -1,6 +1,6 @@
 #include "treap.cc"
+#include "testlib.cc"
 
-#include <cassert>
 #include <cstdio>
 #include <ctime>
 #include <set>
@@ -12,13 +12,13 @@ template<typename V> double measure(int n) {
     clock_t begin = clock();
     V v;
     forn(i, n) v.insert(i);
-    assert(sz(v) == n);
+    assert_equal(sz(v), n);
     forn(i, n) v.insert(i);
-    assert(sz(v) == n);
+    assert_equal(sz(v), n);
     forn(i, n) v.erase(i);
-    assert(sz(v) == 0);
+    assert_equal(sz(v), 0);
     forn(i, n) v.erase(i);
-    assert(sz(v) == 0);
+    assert_equal(sz(v), 0);
     clock_t end = clock();
     return (end - begin) * 1. / CLOCKS_PER_SEC;
 }
@@ -30,7 +30,7 @@ void test_performance() {
 }
 
 int main() {
-    test_performance();
+    t(test_performance);
     return 0;
 }
 
