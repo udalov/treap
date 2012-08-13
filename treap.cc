@@ -110,9 +110,64 @@ template<typename T> typename treap<T>::node treap<T>::treap_merge(node left, no
     }
 }
 
-
 template<typename T> bool treap<T>::insert(const T& x) {
-    return insert_slow(x);
+    if (!root) {
+        root = new treap_node<T>(x);
+        return true;
+    }
+    int priority = new_priority();
+
+    static treap_node<T>* tmp[256];
+    int tmpn = 0;
+
+    node v = root;
+    while (v && v->priority > priority) {
+        tmp[tmpn++] = v;
+        if (v->key < x) {
+            v = v->right;
+        } else if (x < v->key) {
+            v = v->left;
+        } else {
+            return false;
+        }
+    }
+
+    node tv = v;
+    while (tv) {
+        if (tv->key < x) {
+            tv = tv->right;
+        } else if (x < tv->key) {
+            tv = tv->left;
+        } else {
+            return false;
+        }
+    }
+
+    node nv = new treap_node<T>(x);
+    nv->priority = priority;
+
+    if (v) {
+        node_pair p = treap_split(v, x);
+        nv->set_left(p.first);
+        nv->set_right(p.second);
+    }
+
+    if (tmpn) {
+        node pv = tmp[tmpn - 1];
+        if (pv->key < x) {
+            pv->right = nv;
+        } else {
+            pv->left = nv;
+        }
+    } else {
+        root = nv;
+    }
+
+    for (int i = tmpn - 1; i >= 0; i--) {
+        tmp[i]->update_size();
+    }
+
+    return true;
 }
 
 template<typename T> bool treap<T>::erase(const T& x) {
