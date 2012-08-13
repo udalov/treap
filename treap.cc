@@ -1,8 +1,8 @@
 #pragma once
 
+#include <cstdlib>
 #include <functional>
 #include <utility>
-#include <cstdlib>
 
 int new_priority() { return rand() ^ (rand() << 15); }
 
@@ -51,6 +51,33 @@ template<typename T> struct treap {
     static node_pair treap_split(node v, const T& key, bool less_equal = true);
     static node treap_merge(node left, node right);
 };
+
+
+
+// ------- debug code
+#include <cassert>
+template<typename T> void assert_ok(treap_node<T>* v) {
+    if (!v) return;
+    assert_ok(v->left);
+    assert_ok(v->right);
+    if (v->left)
+        assert(v->left->key < v->key),
+        assert(v->left->priority < v->priority);
+    if (v->right)
+        assert(v->key < v->right->key),
+        assert(v->right->priority < v->priority);
+    assert(v->size == (v->left ? v->left->size : 0) + (v->right ? v->right->size : 0) + 1);
+}
+
+template<typename T> void print(treap_node<T>* v, int indent = 0) {}
+template<> void print<int>(treap_node<int>* v, int indent) {
+    if (!v) return;
+    for (int i = indent; i; i--) printf(" ");
+    printf("%d\n", v->key);
+    print(v->left, indent + 1);
+    print(v->right, indent + 1);
+}
+// ------- debug code
 
 
 
