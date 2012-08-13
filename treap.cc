@@ -56,6 +56,7 @@ template<typename T> struct treap {
 
 // ------- debug code
 #include <cassert>
+#include <cstdio>
 template<typename T> void assert_ok(treap_node<T>* v) {
     if (!v) return;
     assert_ok(v->left);
@@ -148,8 +149,9 @@ template<typename T> bool treap<T>::insert(const T& x) {
 
     if (v) {
         node_pair p = treap_split(v, x);
-        nv->set_left(p.first);
-        nv->set_right(p.second);
+        nv->left = p.first;
+        nv->right = p.second;
+        nv->update_size();
     }
 
     if (tmpn) {
