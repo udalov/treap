@@ -175,7 +175,44 @@ template<typename T> bool treap<T>::insert(const T& x) {
 }
 
 template<typename T> bool treap<T>::erase(const T& x) {
-    return erase_slow(x);
+    if (!root) return false;
+
+    static treap_node<T>* tmp[TMP_ARRAY_SIZE];
+    int tmpn = 0;
+
+    node v = root;
+    while (v) {
+        tmp[tmpn++] = v;
+        if (v->key < x) {
+            v = v->right;
+        } else if (x < v->key) {
+            v = v->left;
+        } else {
+            break;
+        }
+    }
+    if (!v) return false;
+
+    node nv = treap_merge(v->left, v->right);
+
+    tmpn--;
+    //TODO: repeating code (treap<T>::insert)
+    if (tmpn) {
+        node pv = tmp[tmpn - 1];
+        if (pv->key < x) {
+            pv->right = nv;
+        } else {
+            pv->left = nv;
+        }
+    } else {
+        root = nv;
+    }
+
+    for (int i = tmpn - 1; i >= 0; i--) {
+        tmp[i]->update_size();
+    }
+
+    return true;
 }
 
 template<typename T> bool treap<T>::contains(const T& x) const {
