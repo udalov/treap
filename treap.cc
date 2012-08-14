@@ -50,6 +50,8 @@ template<typename T> struct treap {
     
     static node_pair treap_split(node v, const T& key, bool less_equal = true);
     static node treap_merge(node left, node right);
+
+    static const int TMP_ARRAY_SIZE = 256;
 };
 
 
@@ -118,7 +120,7 @@ template<typename T> bool treap<T>::insert(const T& x) {
     }
     int priority = new_priority();
 
-    static treap_node<T>* tmp[256];
+    static treap_node<T>* tmp[TMP_ARRAY_SIZE];
     int tmpn = 0;
 
     node v = root;
