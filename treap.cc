@@ -24,8 +24,6 @@ template<typename T> struct treap_node {
     {}
 
     inline void update_size() { size = (left ? left->size : 0) + (right ? right->size : 0) + 1; }
-    inline void set_left(node _left) { left = _left; update_size(); }
-    inline void set_right(node _right) { right = _right; update_size(); }
 };
 
 template<typename T> struct treap {
@@ -90,12 +88,14 @@ template<typename T> typename treap<T>::node_pair treap<T>::treap_split(node v, 
     bool cmp_result = less_equal ? (!(key < v->key)) : (v->key < key);
     if (cmp_result) {
         node_pair p = treap_split(v->right, key, less_equal);
-        v->set_right(p.first);
+        v->right = p.first;
+        v->update_size();
         p.first = v;
         return p;
     } else {
         node_pair p = treap_split(v->left, key, less_equal);
-        v->set_left(p.second);
+        v->left = p.second;
+        v->update_size();
         p.second = v;
         return p;
     }
@@ -105,10 +105,12 @@ template<typename T> typename treap<T>::node treap<T>::treap_merge(node left, no
     if (!left) return right;
     if (!right) return left;
     if (left->priority > right->priority) {
-        left->set_right(treap_merge(left->right, right));
+        left->right = treap_merge(left->right, right);
+        left->update_size();
         return left;
     } else {
-        right->set_left(treap_merge(left, right->left));
+        right->left = treap_merge(left, right->left);
+        right->update_size();
         return right;
     }
 }
